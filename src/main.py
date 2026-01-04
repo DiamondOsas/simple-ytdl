@@ -1,5 +1,5 @@
 import flet as ft
-from src.yt.showdetails import get_video_details
+from yt.showdetails import get_video_details
 
 
 def main(page: ft.Page):
@@ -53,9 +53,9 @@ def main(page: ft.Page):
             page.show_snack_bar(ft.SnackBar(ft.Text("Could not fetch video details. Check URL."), open=True))
 
 
-    download_button = ft.Button(
+    download_button = ft.ElevatedButton(
         content=ft.Text("Show"),
-        icon=ft.Icons.INFO,
+        icon=ft.Icons.VISIBILITY,
         height=50,
         style=ft.ButtonStyle(
             shape=ft.RoundedRectangleBorder(radius=10),
