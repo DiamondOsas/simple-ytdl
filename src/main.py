@@ -18,7 +18,7 @@ async def main(page: ft.Page):
     page.data = {}
 
     # UI Components
-    logo_icon = ft.Icon(name=ft.icons.PLAY_CIRCLE_FILLED_OUTLINED, size=80, color=ft.Colors.RED)
+    logo_icon = ft.Icon(icon=ft.Icons.PLAY_CIRCLE_FILLED_OUTLINED, size=80, color=ft.Colors.RED)
     
     url_input = ft.TextField(
         label="Paste video URL",
@@ -38,16 +38,19 @@ async def main(page: ft.Page):
         
         if video_details:
             page.data["video_details"] = video_details
-            page.go("/details")
+            await page.push_route("/details")
         else:
             page.show_snack_bar(ft.SnackBar(ft.Text("Could not fetch details.")))
 
-    download_button = ft.ElevatedButton(
-        text="Show",
-        icon=ft.icons.VISIBILITY,
+    download_button = ft.Button(
+        content=ft.Text("Show"),
+        icon=ft.Icons.VISIBILITY,
         on_click=show_details_click,
         style=ft.ButtonStyle(bgcolor=ft.Colors.RED, color=ft.Colors.WHITE),
     )
+
+    async def go_home(e):
+        await page.push_route("/")
 
     def video_details_view():
         details = page.data.get("video_details") if page.data else None
@@ -59,10 +62,10 @@ async def main(page: ft.Page):
                 ft.AppBar(title=ft.Text("Video Details")),
                 ft.Column(
                     [
-                        ft.Image(src=thumbnail, width=300) if thumbnail else ft.Icon(name=ft.icons.IMAGE, size=100),
+                        ft.Image(src=thumbnail, width=300) if thumbnail else ft.Icon(icon=ft.Icons.IMAGE, size=100),
                         ft.Text(title, size=24, weight="bold"),
                         ft.Text(f"Creator: {creator}"),
-                        ft.ElevatedButton("Go Back", on_click=lambda _: page.go("/")),
+                        ft.Button("Go Back", on_click=go_home),
                     ],
                     horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                 )
@@ -92,7 +95,7 @@ async def main(page: ft.Page):
         await page.update()
 
     page.on_route_change = route_change
-    page.go(page.route)
+    await page.push_route(page.route)
 
 if __name__ == "__main__":
     ft.run(main)

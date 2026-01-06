@@ -1,4 +1,5 @@
 import os
+import textwrap
 from bs4 import BeautifulSoup
 
 # Define the target directory
@@ -9,37 +10,44 @@ if os.path.exists(docs_dir):
     for filename in os.listdir(docs_dir):
         file_path = os.path.join(docs_dir, filename)
         
-        # We only want to process files (skip directories if any)
+        # We only want to process files (skip directories)
         if os.path.isfile(file_path):
-            # Determine if we should treat it as HTML or just plain text
-            # The prompt asked to "convert everthing", but existing logic was for HTML.
-            # We will process everything, but using BS4 is primarily for HTML.
-            # If it's HTML, we strip tags. If not, we might just copy text?
-            # Given the directory listing is all .html, we focus on that but handle the extension change.
-            
-            # Read the content
             try:
+                # Read the content
                 with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
                     content = f.read()
                 
                 # If it's an HTML file, use BeautifulSoup to extract text
                 if filename.lower().endswith(".html") or filename.lower().endswith(".htm"):
                     soup = BeautifulSoup(content, "html.parser")
-                    clean_text = soup.get_text(separator="\n")
+                    clean_text = soup.get_text(separator=" ")
                 else:
-                    # For non-HTML files, just use the content as is
+                    # For other files (like .txt), just use the content
                     clean_text = content
 
+                # Minify: split into words and join with a single space
+                minified_text = " ".join(clean_text.split())
+                
+                # Wrap text to 100 characters per line
+                wrapped_text = textwrap.fill(minified_text, width=100)
+
                 # Save as a .txt file with the same base name
-                # We replace the original extension with .txt
                 base_name = os.path.splitext(filename)[0]
                 new_name = base_name + ".txt"
                 new_path = os.path.join(docs_dir, new_name)
 
+                # Overwrite if already exists
                 with open(new_path, "w", encoding="utf-8") as f:
-                    f.write(clean_text)
+                    f.write(wrapped_text)
                     
-                print(f"Converted: {filename} -> {new_name}")
+                print(f"Processed: {filename} -> {new_name}")
+                
+                # Delete the original file ONLY if the name changed (e.g. .html -> .txt)
+                # If we processed a .txt file, new_path is the same as file_path, so don't delete.
+                if os.path.abspath(file_path) != os.path.abspath(new_path):
+                    os.remove(file_path)
+                    print(f"Deleted original: {filename}")
+
             except Exception as e:
                 print(f"Error processing {filename}: {e}")
 else:
