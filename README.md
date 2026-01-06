@@ -1,5 +1,5 @@
-# SimpleYtdl app
-
+# SimpleYtdl   
+# Download Youtube Videos and Other Social Media Easily Without any Complexity
 ## Run the app
 
 ### uv

@@ -9,7 +9,7 @@ except ImportError:
 async def main(page: ft.Page):
     page.title = "Simple YTDL"
     page.theme_mode = ft.ThemeMode.DARK
-    page.theme = ft.Theme(color_scheme_seed=ft.colors.RED)
+    page.theme = ft.Theme(color_scheme_seed=ft.Colors.RED)
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     page.padding = 20
@@ -18,14 +18,14 @@ async def main(page: ft.Page):
     page.data = {}
 
     # UI Components
-    logo_icon = ft.Icon(name=ft.icons.PLAY_CIRCLE_FILLED_OUTLINED, size=80, color=ft.colors.RED)
+    logo_icon = ft.Icon(name=ft.icons.PLAY_CIRCLE_FILLED_OUTLINED, size=80, color=ft.Colors.RED)
     
     url_input = ft.TextField(
         label="Paste video URL",
         hint_text="https://www.youtube.com/watch?v=...",
         width=600,
         border_radius=10,
-        bgcolor=ft.colors.GREY_800,
+        bgcolor=ft.Colors.GREY_800,
     )
 
     async def show_details_click(e):
@@ -46,7 +46,7 @@ async def main(page: ft.Page):
         text="Show",
         icon=ft.icons.VISIBILITY,
         on_click=show_details_click,
-        style=ft.ButtonStyle(bgcolor=ft.colors.RED, color=ft.colors.WHITE),
+        style=ft.ButtonStyle(bgcolor=ft.Colors.RED, color=ft.Colors.WHITE),
     )
 
     def video_details_view():
@@ -64,7 +64,7 @@ async def main(page: ft.Page):
                         ft.Text(f"Creator: {creator}"),
                         ft.ElevatedButton("Go Back", on_click=lambda _: page.go("/")),
                     ],
-                    horizontal_alignment="center",
+                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                 )
             ],
             vertical_alignment=ft.MainAxisAlignment.CENTER,
@@ -95,4 +95,4 @@ async def main(page: ft.Page):
     page.go(page.route)
 
 if __name__ == "__main__":
-    ft.app(target=main)
+    ft.run(main)
