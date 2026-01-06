@@ -31,7 +31,7 @@ async def main(page: ft.Page):
     async def show_details_click(e):
         url = url_input.value
         if not url:
-            page.open(ft.SnackBar(ft.Text("Please enter a URL")))
+            page.show_snack_bar(ft.SnackBar(ft.Text("Please enter a URL")))
             return
 
         video_details = get_video_details(url)
@@ -40,7 +40,7 @@ async def main(page: ft.Page):
             page.data["video_details"] = video_details
             page.go("/details")
         else:
-            page.open(ft.SnackBar(ft.Text("Could not fetch details.")))
+            page.show_snack_bar(ft.SnackBar(ft.Text("Could not fetch details.")))
 
     download_button = ft.ElevatedButton(
         text="Show",
@@ -67,8 +67,8 @@ async def main(page: ft.Page):
                     horizontal_alignment="center",
                 )
             ],
-            vertical_alignment="center",
-            horizontal_alignment="center",
+            vertical_alignment=ft.MainAxisAlignment.CENTER,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         )
 
     async def route_change(e):
@@ -83,8 +83,8 @@ async def main(page: ft.Page):
                     url_input,
                     download_button,
                 ],
-                vertical_alignment="center",
-                horizontal_alignment="center",
+                vertical_alignment=ft.MainAxisAlignment.CENTER,
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
             )
         )
         if page.route == "/details":
