@@ -5,6 +5,7 @@ __pycache__/
 prompt.txt
 # C extensions
 *.so
+docs/
 
 # Distribution / packaging
 .Python

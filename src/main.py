@@ -18,7 +18,7 @@ async def main(page: ft.Page):
     page.data = {}
 
     # UI Components
-    logo_icon = ft.Icon(icon=ft.icons.PLAY_CIRCLE_FILLED_OUTLINED, size=80, color=ft.colors.RED)
+    logo_icon = ft.Icon(name=ft.icons.PLAY_CIRCLE_FILLED_OUTLINED, size=80, color=ft.colors.RED)
     
     url_input = ft.TextField(
         label="Paste video URL",
@@ -42,8 +42,8 @@ async def main(page: ft.Page):
         else:
             page.open(ft.SnackBar(ft.Text("Could not fetch details.")))
 
-    download_button = ft.Button(
-        "Show",
+    download_button = ft.ElevatedButton(
+        text="Show",
         icon=ft.icons.VISIBILITY,
         on_click=show_details_click,
         style=ft.ButtonStyle(bgcolor=ft.colors.RED, color=ft.colors.WHITE),
@@ -54,15 +54,15 @@ async def main(page: ft.Page):
         title, thumbnail, creator, duration = details if details else ("Unknown", None, "Unknown", 0)
 
         return ft.View(
-            "/details",
-            [
+            route="/details",
+            controls=[
                 ft.AppBar(title=ft.Text("Video Details")),
                 ft.Column(
                     [
-                        ft.Image(src=thumbnail, width=300) if thumbnail else ft.Icon(ft.icons.IMAGE, size=100),
+                        ft.Image(src=thumbnail, width=300) if thumbnail else ft.Icon(name=ft.icons.IMAGE, size=100),
                         ft.Text(title, size=24, weight="bold"),
                         ft.Text(f"Creator: {creator}"),
-                        ft.Button("Go Back", on_click=lambda _: page.go("/")),
+                        ft.ElevatedButton("Go Back", on_click=lambda _: page.go("/")),
                     ],
                     horizontal_alignment="center",
                 )
@@ -75,8 +75,8 @@ async def main(page: ft.Page):
         page.views.clear()
         page.views.append(
             ft.View(
-                "/",
-                [
+                route="/",
+                controls=[
                     ft.AppBar(title=ft.Text("Simple YTDL")),
                     logo_icon,
                     ft.Text("Simple YouTube Downloader", size=32, weight="bold"),
@@ -95,4 +95,4 @@ async def main(page: ft.Page):
     page.go(page.route)
 
 if __name__ == "__main__":
-    ft.run(main)
+    ft.app(target=main)

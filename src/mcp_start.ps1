@@ -1,0 +1,2 @@
+Start-Process -FilePath "C:\Program Files\Google\Chrome\Application\chrome.exe" -ArgumentList "--remote-debugging-port=9222", 
+"--user-data-dir=C:\Users\user\.gemini\tmp\chrome_dev_profile", "--no-first-run", "--no-default-browser-check" -NoNewWindow
