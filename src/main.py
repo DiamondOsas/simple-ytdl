@@ -1,12 +1,23 @@
 import flet as ft
+from yt.showdetails import get_video_details
 
 def main(page):
-    page.title = "Test App "
-    hello = ft.Text("Type your note")
+    def send_item(e):
+        items.controls.append(ft.Text(box.value))
+        box.value = ""
+        page.update()
+
+    page.title = "TO DO LIST"   
+    hello = ft.Text("Type your Item")
+    items = ft.Column()
     box = ft.TextField()
-    row1 = ft.Row(box)
+    button  = ft.Button("Save", on_click=send_item)
+    row1 = ft.Row(controls=[box, button])
+
+
     page.add(
         hello,
+        items,
         row1
     ) 
 
