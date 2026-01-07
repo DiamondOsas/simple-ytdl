@@ -2,7 +2,12 @@ import yt_dlp
 
 def get_video_details(url) -> list[str] | None:
 
-    options = {'quiet' : True}
+    options = {
+        'quiet' : True,
+        'extract_flat': True,
+        'skip_download': True,
+        'js-runtimes': 'node'
+               }
     downloader = yt_dlp.YoutubeDL(options)
 
     try:
@@ -10,7 +15,7 @@ def get_video_details(url) -> list[str] | None:
 
         title = video_info.get("title")
         thumbnail = video_info.get("thumbnail")
-        creator = video_info.get("creator") or video_info.get("uploader")
+        creator =  video_info.get("uploader")
         duration = video_info.get("duration")
         
         return [title, thumbnail, creator, duration]
