@@ -1,2 +1,2 @@
 "flet[all]"
-"yt-dlp[default]"
+pytubefix

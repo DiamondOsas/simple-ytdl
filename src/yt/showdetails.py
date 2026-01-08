@@ -1,25 +1,21 @@
-import yt_dlp
+from pytubefix import AsyncYouTube
 
-def get_video_details(url) -> list[str] | None:
-
-    options = {
-        'quiet' : True,
-        'extract_flat': True,
-        'skip_download': True,
-        'js-runtimes': 'node'
-               }
-    downloader = yt_dlp.YoutubeDL(options)
-
+async def get_video_details(url) -> list[str] | None:
     try:
-        video_info = downloader.extract_info(url ,download = False)
-
-        title = video_info.get("title")
-        thumbnail = video_info.get("thumbnail")
-        creator =  video_info.get("uploader")
-        duration = video_info.get("duration")
+        yt = AsyncYouTube(url)
         
-        return [title, thumbnail, creator, duration]
+        # In AsyncYouTube, fetching attributes usually requires awaiting
+        title = await yt.title
+        thumbnail = await yt.thumbnail_url
+        creator = await yt.author
+        duration = await yt.length  # duration in seconds
+
+        # Convert duration from seconds to a more readable format (e.g., mm:ss)
+        minutes, seconds = divmod(duration, 60)
+        duration_str = f"{minutes}:{seconds:02d}"
+
+        return [title, thumbnail, creator, duration_str]
 
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"Error fetching details: {e}")
         return None

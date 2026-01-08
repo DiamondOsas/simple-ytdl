@@ -10,7 +10,7 @@ def main(page: ft.Page):
     page.window_height = 800
 
     # Function to handle button click and show details
-    def show_video_details(e):
+    async def show_video_details(e):
         url = url_input.value
         if not url:
             # Show error if no URL is provided
@@ -24,7 +24,8 @@ def main(page: ft.Page):
         page.update()
 
         # Fetch video details using the imported function
-        details = get_video_details(url)
+        print(url)
+        details = await get_video_details(url)
         
         # Re-enable button
         search_button.disabled = False
