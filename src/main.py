@@ -39,6 +39,41 @@ def main(page: ft.Page):
             for q in qualities:
                 quality_options.append(ft.dropdown.Option(q))
 
+            # Dropdown component
+            quality_dropdown = ft.Dropdown(
+                label="Quality",
+                options=quality_options,
+                value=quality_options[0].key if quality_options else None,
+                border_radius=10,
+                width=200
+            )
+
+            # Download handler
+            def handle_download(e):
+                quality = quality_dropdown.value
+                if not quality:
+                    return
+                
+                page.snack_bar = ft.SnackBar(ft.Text(f"Starting download: {title} ({quality})..."))
+                page.snack_bar.open = True
+                page.update()
+
+                res = download_video(url, quality)
+                
+                if res:
+                    page.snack_bar = ft.SnackBar(ft.Text("Download Finished!"))
+                else:
+                    page.snack_bar = ft.SnackBar(ft.Text("Download Failed."))
+                page.snack_bar.open = True
+                page.update()
+
+            download_button = ft.FloatingActionButton(
+                icon=ft.Icons.DOWNLOAD,
+                content="Download",
+                on_click=handle_download,
+                bgcolor=ft.Colors.RED_600,
+            )
+
             # Create a stylish card for the video details
             video_card = ft.Container(
                 content=ft.Column([
@@ -59,13 +94,11 @@ def main(page: ft.Page):
                         ft.Icon(ft.Icons.TIMER, size=16, color=ft.Colors.GREY),
                         ft.Text(f"Duration: {duration}", color=ft.Colors.GREY),
                     ], spacing=10),
-                    # Dropdown to show available qualities
-                    ft.Dropdown(
-                        label="Available Qualities",
-                        options=quality_options,
-                        value=quality_options[0].key if quality_options else None,
-                        border_radius=10
-                    )
+                    # Dropdown and Download Button
+                    ft.Row([
+                        quality_dropdown,
+                        download_button
+                    ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN, vertical_alignment=ft.CrossAxisAlignment.CENTER)
                 ], spacing=10),
                 padding=15,
                 border=ft.Border.all(1, ft.Colors.GREY_800),
@@ -88,7 +121,8 @@ def main(page: ft.Page):
     header = ft.Row(
         controls=[
             ft.Image(src="yticon.png", width=50, height=50), # Icon from assets
-            ft.Text("Simple YouTube Downloader", size=24, weight=ft.FontWeight.BOLD)
+            ft.Text("Simple YouTube Downloader", size=24, weight=ft.FontWeight.BOLD),
+            # ft.Text("Opensource", size=7, )
         ],
         alignment=ft.MainAxisAlignment.CENTER,
         spacing=15
@@ -104,7 +138,7 @@ def main(page: ft.Page):
     )
 
     search_button = ft.Button(
-        content="Show Details",
+        content="Show",
         icon=ft.Icons.SEARCH,
         on_click=show_video_details,
         height=50, # Match text field height
