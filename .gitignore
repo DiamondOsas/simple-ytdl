@@ -1,11 +1,16 @@
+#Custom
+docs/
+.gitignore
+docs.txt
+prompt.txt
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
-prompt.txt
 # C extensions
 *.so
-docs/
+
 
 # Distribution / packaging
 .Python

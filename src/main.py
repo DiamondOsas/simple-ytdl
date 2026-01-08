@@ -1,48 +1,123 @@
 import flet as ft
 from yt.showdetails import get_video_details
 
-def main(page):
+def main(page: ft.Page):
+    # Page Configuration
+    page.title = "Simple YouTube Downloader"
+    page.theme_mode = ft.ThemeMode.DARK # Dark mode for YouTube-like feel
+    page.padding = 20
+    page.window_width = 600
+    page.window_height = 800
+
+    # Function to handle button click and show details
     def show_video_details(e):
-        url = box.value
+        url = url_input.value
         if not url:
+            # Show error if no URL is provided
+            page.snack_bar = ft.SnackBar(ft.Text("Please enter a YouTube URL first!"))
+            page.snack_bar.open = True
+            page.update()
             return
 
+        # Disable button while processing (optional, but good UX)
+        search_button.disabled = True
+        page.update()
+
+        # Fetch video details using the imported function
         details = get_video_details(url)
         
+        # Re-enable button
+        search_button.disabled = False
+
         if details:
             title, thumbnail, creator, duration = details
 
-            # Create controls to display details
-            items.controls.append(
-                ft.Column([
-                    ft.Image(src=thumbnail, width=300, repeat=ft.ImageRepeat.NO_REPEAT, fit=ft.BoxFit.CONTAIN),
-                    ft.Text(f"Title: {title}", weight=ft.FontWeight.BOLD, size=16),
-                    ft.Text(f"Channel: {creator}"),
-                    ft.Text(f"Duration: {duration}"),
-                ], spacing=5)
+            # Create a stylish card for the video details
+            video_card = ft.Container(
+                content=ft.Column([
+                    # Video Thumbnail
+                    ft.Image(
+                        src=thumbnail,
+                        width=400,
+                        height=225,
+                        fit=ft.BoxFit.COVER,
+                        border_radius=ft.Border.all(10)
+                    ),
+                    # Video Title
+                    ft.Text(f"Title: {title}", size=16, weight=ft.FontWeight.BOLD),
+                    # Creator and Duration
+                    ft.Row([
+                        ft.Icon(ft.Icons.PERSON, size=16, color=ft.Colors.GREY),
+                        ft.Text(f"Channel: {creator}", color=ft.Colors.GREY),
+                        ft.Icon(ft.Icons.TIMER, size=16, color=ft.Colors.GREY),
+                        ft.Text(f"Duration: {duration}", color=ft.Colors.GREY),
+                    ], spacing=10)
+                ], spacing=10),
+                padding=15,
+                border=ft.Border.all(1, ft.Colors.GREY_800),
+                border_radius=10,
+                bgcolor=ft.Colors.GREY_900,
             )
-            box.value = ""
+
+            # Add to results and clear input
+            results_column.controls.append(video_card)
+            url_input.value = ""
             page.update()
         else:
             page.snack_bar = ft.SnackBar(ft.Text("Could not get video details. Check URL."))
             page.snack_bar.open = True
             page.update()
 
-    page.title = "Simple Youtube Downloder"   
-    hello = ft.Text("Type your Item")
-    items = ft.Column(scroll=ft.ScrollMode.AUTO, expand=True)
-    box = ft.TextField(expand=True)
-    button  = ft.Button("Show", on_click=show_video_details)
-    row1 = ft.Row(controls=[box, button])
+    # --- UI Layout ---
 
+    # Header: Icon and Title
+    header = ft.Row(
+        controls=[
+            ft.Image(src="yticon.png", width=50, height=50), # Icon from assets
+            ft.Text("Simple YouTube Downloader", size=24, weight=ft.FontWeight.BOLD)
+        ],
+        alignment=ft.MainAxisAlignment.CENTER,
+        spacing=15
+    )
 
+    # Input Area: Custom TextField and Button
+    url_input = ft.TextField(
+        label="YouTube Link",
+        hint_text="Paste your video URL here",
+        border_radius=15,
+        expand=True,
+        prefix_icon=ft.Icons.LINK # Visual cue
+    )
+
+    search_button = ft.Button(
+        content="Show Details",
+        icon=ft.Icons.SEARCH,
+        on_click=show_video_details,
+        height=50, # Match text field height
+    )
+
+    input_row = ft.Row(
+        controls=[url_input, search_button],
+        alignment=ft.MainAxisAlignment.CENTER,
+        spacing=10
+    )
+
+    # Results Area: Scrollable list of cards
+    results_column = ft.Column(
+        scroll=ft.ScrollMode.AUTO,
+        expand=True,
+        spacing=20
+    )
+
+    # Add components to the page
     page.add(
-        hello,
-        row1,
-        items
-    ) 
-
-
+        header,
+        ft.Divider(height=20, color=ft.Colors.TRANSPARENT), # Spacer
+        input_row,
+        ft.Divider(height=20, color=ft.Colors.TRANSPARENT), # Spacer
+        results_column
+    )
 
 if __name__ == "__main__":
-    ft.run(main)
+    # Start the app, pointing to the 'assets' directory for images
+    ft.run(main=main, before_main=None, name="Diamond", host=None, port=0, view=None, assets_dir="assets")
