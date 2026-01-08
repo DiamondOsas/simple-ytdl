@@ -1,21 +1,25 @@
-from pytubefix import AsyncYouTube
+from pytubefix import YouTube
 
-async def get_video_details(url) -> list[str] | None:
+
+def get_video_details(url : str) -> list | None:
     try:
-        yt = AsyncYouTube(url)
-        
-        # In AsyncYouTube, fetching attributes usually requires awaiting
-        title = await yt.title
-        thumbnail = await yt.thumbnail_url
-        creator = await yt.author
-        duration = await yt.length  # duration in seconds
+        yt = YouTube(url)
+        title = yt.title
+        thumbnail = yt.thumbnail_url
+        author = yt.author
+        duration = yt.length
 
-        # Convert duration from seconds to a more readable format (e.g., mm:ss)
+        # Get available qualities
+        streams = yt.streams.filter(only_video=True)
+        qualities = sorted(list(set([s.resolution for s in streams if s.resolution])))
+       
+
+
         minutes, seconds = divmod(duration, 60)
-        duration_str = f"{minutes}:{seconds:02d}"
 
-        return [title, thumbnail, creator, duration_str]
-
+        durationstr = str(minutes)+":"+str(seconds)
+        return [title, thumbnail, author, durationstr, qualities]
+    
     except Exception as e:
-        print(f"Error fetching details: {e}")
+        print(f"Error: ", e)
         return None

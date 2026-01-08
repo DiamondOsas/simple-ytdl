@@ -1,5 +1,6 @@
 import flet as ft
 from yt.showdetails import get_video_details
+from yt.download import download_video
 
 def main(page: ft.Page):
     # Page Configuration
@@ -10,7 +11,7 @@ def main(page: ft.Page):
     page.window_height = 800
 
     # Function to handle button click and show details
-    async def show_video_details(e):
+    def show_video_details(e):
         url = url_input.value
         if not url:
             # Show error if no URL is provided
@@ -25,13 +26,18 @@ def main(page: ft.Page):
 
         # Fetch video details using the imported function
         print(url)
-        details = await get_video_details(url)
+        details = get_video_details(url)
         
         # Re-enable button
         search_button.disabled = False
 
         if details:
-            title, thumbnail, creator, duration = details
+            title, thumbnail, creator, duration, qualities = details
+
+            # Create options for the dropdown menu based on available qualities
+            quality_options = []
+            for q in qualities:
+                quality_options.append(ft.dropdown.Option(q))
 
             # Create a stylish card for the video details
             video_card = ft.Container(
@@ -52,7 +58,14 @@ def main(page: ft.Page):
                         ft.Text(f"Channel: {creator}", color=ft.Colors.GREY),
                         ft.Icon(ft.Icons.TIMER, size=16, color=ft.Colors.GREY),
                         ft.Text(f"Duration: {duration}", color=ft.Colors.GREY),
-                    ], spacing=10)
+                    ], spacing=10),
+                    # Dropdown to show available qualities
+                    ft.Dropdown(
+                        label="Available Qualities",
+                        options=quality_options,
+                        value=quality_options[0].key if quality_options else None,
+                        border_radius=10
+                    )
                 ], spacing=10),
                 padding=15,
                 border=ft.Border.all(1, ft.Colors.GREY_800),
