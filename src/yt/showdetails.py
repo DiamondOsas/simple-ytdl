@@ -8,12 +8,11 @@ def get_video_details(url : str) -> list | None:
         thumbnail = yt.thumbnail_url
         author = yt.author
         duration = yt.length
-
-        # Get available qualities
+        
+        # Get all available video qualities (including adaptive streams like 1080p)
         streams = yt.streams.filter(only_video=True)
         qualities = sorted(list(set([s.resolution for s in streams if s.resolution])))
-       
-
+        
 
         minutes, seconds = divmod(duration, 60)
 
