@@ -32,13 +32,21 @@ def download_video(url: str, quality: str) -> str | None:
             print("Downloading audio track...")
             audio_stream.download(filename=audio_tmp)
             
+            # Check sizes
+            v_size = os.path.getsize(video_tmp) / (1024 * 1024)
+            a_size = os.path.getsize(audio_tmp) / (1024 * 1024)
+            print(f"Downloaded: Video={v_size:.2f}MB, Audio={a_size:.2f}MB")
+
             # 4. Merge using FFmpeg
             print("Merging streams together...")
             if combine_audio_video(video_tmp, audio_tmp, final_file):
                 print("Download and Merge Successful!")
                 # Cleanup temporary files
-                os.remove(video_tmp)
-                os.remove(audio_tmp)
+                try:
+                    os.remove(video_tmp)
+                    os.remove(audio_tmp)
+                except Exception as e:
+                    print(f"Warning: Could not delete temp files: {e}")
                 return "Success"
             else:
                 print("Error: Merging failed.")
@@ -61,17 +69,28 @@ def combine_audio_video(video_path: str, audio_path: str, output_path: str) -> b
         input_video = ffmpeg.input(video_path)
         input_audio = ffmpeg.input(audio_path)
 
-        # Output settings: copy video as is, re-encode audio to aac for compatibility
+        # Simple merge command: map both inputs to output
+        # explicit mapping isn't strictly necessary if we just pass inputs, 
+        # but passing them as arguments to output works well.
+        # We use c='copy' to avoid re-encoding if possible (fastest), 
+        # but if audio is improper format for mp4, this might fail.
+        # Let's try 'copy' for video and 'aac' for audio to be safe.
+        
+        print("Running FFmpeg...")
         ffmpeg.output(
-            input_video['v'],
-            input_audio['a'],
+            input_video,
+            input_audio,
             output_path,
             vcodec='copy',
-            acodec='aac'
-        ).run(overwrite_output=True, quiet=True)
+            acodec='aac',
+            strict='experimental'
+        ).run(overwrite_output=True) # Removed quiet=True to see errors in console
 
         return True
 
     except ffmpeg.Error as e:
         print(f"FFmpeg Error: {e}")
+        # If possible, print stderr to see what actually happened
+        if hasattr(e, 'stderr') and e.stderr:
+             print(f"FFmpeg Log: {e.stderr.decode('utf8')}")
         return False
