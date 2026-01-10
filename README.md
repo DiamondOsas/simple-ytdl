@@ -2,24 +2,27 @@
 # Download Youtube Videos and Other Social Media Easily Without any Complexity
 ## Run the app
 
-### uv
-
 Run as a desktop app:
 
+Windows, Linux or Macos
+
 ```
-uv run flet run
+flet run
 ```
 
 Run as a web app:
 
 ```
-uv run flet run --web
+flet run --web
 ```
 
 For more details on running the app, refer to the [Getting Started Guide](https://docs.flet.dev/).
 
 ## Build the app
 
+
+
+NOTE: You need Flutter SDK to Build the Code
 ### Android
 
 ```
@@ -42,15 +45,11 @@ For more details on building and signing `.ipa`, refer to the [iOS Packaging Gui
 flet build macos -v
 ```
 
-For more details on building macOS package, refer to the [macOS Packaging Guide](https://docs.flet.dev/publish/macos/).
-
 ### Linux
 
 ```
 flet build linux -v
 ```
-
-For more details on building Linux package, refer to the [Linux Packaging Guide](https://docs.flet.dev/publish/linux/).
 
 ### Windows
 
@@ -58,4 +57,10 @@ For more details on building Linux package, refer to the [Linux Packaging Guide]
 flet build windows -v
 ```
 
-For more details on building Windows package, refer to the [Windows Packaging Guide](https://docs.flet.dev/publish/windows/).
+For more details on building packages, refer to the [Packaging Guide](https://docs.flet.dev/publish/).
+
+
+If you want to contrivute you can [emailme](mailto:diamondosazuwa@gmail.com)
+
+Built by : DiamondOsazuwa
+
