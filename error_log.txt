@@ -1,0 +1,9 @@
+Unhandled error in 'on_click' handler
+Traceback (most recent call last):
+  File "C:\Users\user\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\messaging\session.py", line 193, in dispatch_event
+    await control._trigger_event(event_name, event_data)
+  File "C:\Users\user\AppData\Local\Programs\Python\Python313\Lib\site-packages\flet\controls\base_control.py", line 318, in _trigger_event
+    await event_handler(e)
+  File "C:\PROGRAMMING\simple-ytdl\src\main.py", line 40, in show_video_details
+    await page.update()
+TypeError: object NoneType can't be used in 'await' expression

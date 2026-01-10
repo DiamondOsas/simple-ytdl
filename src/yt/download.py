@@ -11,9 +11,9 @@ def download_video(url: str, quality: str) -> str | None:
         print(f"Starting process for: {safe_title} ({quality})")
 
         # 1. Select the Streams
-        # We search specifically for adaptive streams (separate V/A)
+    # We search specifically for adaptive streams (separate V/A)
         video_stream = yt.streams.filter(res=quality, only_video=True).first()
-        audio_stream = yt.streams.filter(only_audio=True).order_by('abr').desc().first()
+        audio_stream = yt.streams.filter(only_audio=True, file_extension='mp4').order_by('abr').desc().first()
         #2 at least
         if not video_stream:
             print(f"Error: No video stream found for {quality}")
