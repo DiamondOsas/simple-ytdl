@@ -2,7 +2,7 @@
 docs/
 .gitignore
 docs.txt
-prompt.txt
+test
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

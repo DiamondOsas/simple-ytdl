@@ -3,14 +3,13 @@ from yt.showdetails import get_video_details
 from yt.download import download_video
 
 def main(page: ft.Page):
-    # Page Configuration
     page.title = "Simple YouTube Downloader"
-    page.theme_mode = ft.ThemeMode.DARK # Dark mode for YouTube-like feel
+    page.theme_mode = ft.ThemeMode.DARK # Light mode is for Losers
     page.padding = 20
     page.window_width = 600
     page.window_height = 800
 
-    # Function to handle button click and show details
+    #Have no idea why the fucking funtion hve to take the parameter e when it is not even using it or i am i the mf
     def show_video_details(e):
         url = url_input.value
         if not url:
@@ -122,13 +121,12 @@ def main(page: ft.Page):
         controls=[
             ft.Image(src="yticon.png", width=50, height=50), # Icon from assets
             ft.Text("Simple YouTube Downloader", size=24, weight=ft.FontWeight.BOLD),
-            # ft.Text("Opensource", size=7, )
+          
         ],
         alignment=ft.MainAxisAlignment.CENTER,
         spacing=15
     )
 
-    # Input Area: Custom TextField and Button
     url_input = ft.TextField(
         label="YouTube Link",
         hint_text="Paste your video URL here",
@@ -156,14 +154,28 @@ def main(page: ft.Page):
         expand=True,
         spacing=20
     )
+   
+   
+    footer = ft.Row(
+        controls=[
+            ft.Text("Made by Diamond Osazuwa", font_family="Cambria")
+        ],
+        alignment=ft.MainAxisAlignment.CENTER,
+        opacity=0.5
+    )
 
+    divider = ft.Divider(
+        height=20,
+        color=ft.Colors.TRANSPARENT
+    )
     # Add components to the page
     page.add(
         header,
-        ft.Divider(height=20, color=ft.Colors.TRANSPARENT), # Spacer
+        divider, # Spacer
         input_row,
-        ft.Divider(height=20, color=ft.Colors.TRANSPARENT), # Spacer
-        results_column
+        divider, # Spacer
+        results_column,
+        footer
     )
 
 if __name__ == "__main__":
