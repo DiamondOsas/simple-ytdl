@@ -11,7 +11,8 @@ jobs:
   build:
     runs-on: windows-latest
 
-
+    env:
+      VERSION: 0.0.2
 
     steps:
     - name: Checkout repository
@@ -51,6 +52,8 @@ jobs:
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
+        tag : v${{ env.VERSION }}
+        release_name: Simple YTDL v${{ env.VERSION }}
         file: app-release.zip
         asset_name: simple-ytdl_Windows.zip
         overwrite: true
