@@ -38,7 +38,7 @@ jobs:
     - name: Build EXE package
       run: |
         chcp 65001
-        flet build windows --no-rich-output 
+        flet build windows --no-rich-output --yes
       env:
         PYTHONUTF8: "1"
         PYTHONIOENCODING: "utf8"
