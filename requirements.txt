@@ -1,3 +1,3 @@
-"flet[all]"
+flet[all]
 pytubefix
 ffmpeg-python
