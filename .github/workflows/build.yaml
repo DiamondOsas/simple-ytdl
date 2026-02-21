@@ -1,0 +1,53 @@
+name : Build Application
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+  
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+    
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.38.5'
+    
+    - name: Enable Windows desktop
+      run: flutter config --enable-windows-desktop
+
+    - name: Build EXE package
+      run: |
+        flet build windows
+    
+    - name: Zip release folder
+      run: Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationPath app-release.zip
+
+
+    - name: Create and Upload Release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: app-release.zip
+        asset_name: simple-ytdl_Windows.zip
+        overwrite: true
+        body: |
+          Changes
+          - Bugs Fixes 
+          - Update Feature Done
