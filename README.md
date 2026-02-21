@@ -85,8 +85,4 @@ If you want to contribute, report a bug, or suggest a feature, feel free to reac
 
 **Built by [DiamondOsazuwa**](https://www.google.com/search?q=https://github.com/DiamondOsas)
 
-```
 
-Would you like me to draft a quick "Prerequisites" section showing how to install Flet and Python to add to this?
-
-```
