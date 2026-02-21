@@ -9,7 +9,8 @@ authors = [
 ]
 dependencies = [
   "flet>=0.80.1",
-  "yt-dlp>=2023.0.0"
+  "pytubefix",
+  "ffmpeg-python"
 ]
 
 [dependency-groups]
