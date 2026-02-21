@@ -27,9 +27,10 @@ jobs:
         pip install -r requirements.txt
     
     - name: Setup Flutter
-      uses: subosito/flutter-action@v2
+      uses: flutter-actions/setup-flutter@v4
       with:
-        flutter-version: '3.38.5'
+          channel: stable
+          version: 3.0.2
     
     - name: Enable Windows desktop
       run: flutter config --enable-windows-desktop
