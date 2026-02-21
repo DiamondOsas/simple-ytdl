@@ -11,6 +11,8 @@ jobs:
   build:
     runs-on: windows-latest
 
+
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
@@ -34,8 +36,12 @@ jobs:
 
     - name: Build EXE package
       run: |
-        flet build windows
-    
+        chcp 65001
+        flet build windows --no-rich-output 
+      env:
+        PYTHONUTF8: "1"
+        PYTHONIOENCODING: "utf8"
+        
     - name: Zip release folder
       run: Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationPath app-release.zip
 
