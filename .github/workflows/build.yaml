@@ -1,4 +1,4 @@
-name : Build Application
+name: Build Application
 
 on:
   workflow_dispatch:
@@ -6,55 +6,80 @@ on:
 permissions:
   contents: write
 
-  
 jobs:
   build:
-    runs-on: windows-latest
+    strategy:
+      matrix:
+        # Define your OS and a friendly name for the files
+        include:
+          - os: windows-latest
+            platform: windows
+          - os: ubuntu-latest
+            platform: linux
+          - os: macos-latest
+            platform: macos
 
-
+    runs-on: ${{ matrix.os }}
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.12'
 
-    - name: Install dependencies
-      run: |
-        pip install -r requirements.txt
-    
     - name: Setup Flutter
       uses: flutter-actions/setup-flutter@v4
       with:
-          channel: stable
-          version: 3.0.2
-    
-    - name: Enable Windows desktop
-      run: flutter config --enable-windows-desktop
+        channel: stable
+        version: 3.0.2
 
-    - name: Build EXE package
+    - name: Install dependencies
+      run: pip install -r requirements.txt
+
+    # Custom Instructions per OS
+    - name: Build App
       run: |
-        chcp 65001
-        flet build windows --no-rich-output --yes
-      env:
-        PYTHONUTF8: "1"
-        PYTHONIOENCODING: "utf8"
-        
-    - name: Zip release folder
-      run: Compress-Archive -Path build/windows/* -DestinationPath app-release.zip
+        flet build ${{ matrix.platform }} --no-rich-output --yes
 
+    # Use a generic zip command or 'if' for platform-specific zipping
+    - name: Zip Windows
+      if: matrix.platform == 'windows'
+      run: Compress-Archive -Path build/windows/* -DestinationPath app-windows.zip
+      shell: pwsh
 
-    - name: Create and Upload Release
-      uses: svenstaro/upload-release-action@v2
+    - name: Zip Linux/Mac
+      if: matrix.platform != 'windows'
+      run: zip -r app-${{ matrix.platform }}.zip build/${{ matrix.platform }}/*
+
+    # This "saves" the file so the next job can see it
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
       with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: app-release.zip
-        asset_name: simple-ytdl_Windows.zip
-        overwrite: true
-        body: |
-          Changes
-          - Bugs Fixes 
-          - Update Feature Done
+        name: build-${{ matrix.platform }}
+        path: app-${{ matrix.platform }}.zip
+
+  release:
+    needs: build # Wait for all builds to finish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all builds
+        uses: actions/download-artifact@v4
+        with:
+          pattern: build-*
+          merge-multiple: true
+
+      - name: Create and Upload Release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: app-*.zip # Grabs all zip files found
+          file_glob: true
+          tag: v1.0.${{ github.run_number }}
+          overwrite: true
+          body: |
+            Changes:
+            - Multi-platform support (Windows, Linux, macOS)
+            - Bug Fixes
