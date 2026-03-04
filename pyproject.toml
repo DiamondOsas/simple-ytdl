@@ -5,11 +5,12 @@ description = ""
 readme = "README.md"
 requires-python = ">=3.10"
 authors = [
-    { name = "Flet developer", email = "you@example.com" }
+    { name = "Diamond Osazuwa", email = "diamondosazuwa@gmail.com" }
 ]
 dependencies = [
   "flet>=0.80.1",
-  "yt-dlp>=2023.0.0"
+  "pytubefix",
+  "ffmpeg-python"
 ]
 
 [dependency-groups]
