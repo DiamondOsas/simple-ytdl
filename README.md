@@ -1,4 +1,4 @@
-#  SimpleYtdl
+#  SimpleYTdl
 
 **Download YouTube and other social media videos easily, without any complexity.**
 
