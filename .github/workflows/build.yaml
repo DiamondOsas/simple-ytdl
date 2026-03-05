@@ -8,7 +8,7 @@ permissions:
 
 jobs:
   build:
-    strategy
+    strategy:
       matrix:
         # Define your OS and a friendly name for the files
         include:
