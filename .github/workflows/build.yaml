@@ -11,7 +11,15 @@ jobs:
     strategy:
       matrix:
         # Define your OS and a friendly name for the files
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+          - os: ubuntu-latest
+            platform: linux
+    
+          - os: windows-latest
+            platform: windows
+    
+          - os: macos-latest
+            platform: macos
         
     runs-on: ${{ matrix.os }}
 
@@ -40,7 +48,7 @@ jobs:
     # Custom Instructions per OS
     - name: Build App
       run: |
-        flet build ${{ matrix.os }} --no-rich-output --yes
+        flet build ${{ matrix.platform }} --no-rich-output --yes
 
     # Use a generic zip command or 'if' for os-specific zipping
     - name: Zip Windows
