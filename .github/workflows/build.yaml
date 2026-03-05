@@ -46,12 +46,6 @@ jobs:
     - name: Enable Desktop Mode
       run: flutter config --enable-${{ matrix.platform }}-desktop
 
-    - name: Setup Macos Dependencies 
-      if: matrix.platform == 'macos'
-      run: |
-        pip install "chardet<7"
-        xcode-select --install
-
     - name: Setup Linux Dependencies
       if: matrix.platform == 'linux'
       run: |
