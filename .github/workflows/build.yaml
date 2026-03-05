@@ -11,14 +11,8 @@ jobs:
     strategy:
       matrix:
         # Define your OS and a friendly name for the files
-        include:
-          - os: windows-latest
-            platform: windows
-          - os: ubuntu-latest
-            platform: linux
-          - os: macos-latest
-            platform: macos
-
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -39,27 +33,31 @@ jobs:
     - name: Install dependencies
       run: pip install -r requirements.txt
 
+    - name : Install Chardet on Macos
+      if: matrix.os == 'macos'
+      run: pip instaall "chardet<7"
+
     # Custom Instructions per OS
     - name: Build App
       run: |
-        flet build ${{ matrix.platform }} --no-rich-output --yes
+        flet build ${{ matrix.os }} --no-rich-output --yes
 
-    # Use a generic zip command or 'if' for platform-specific zipping
+    # Use a generic zip command or 'if' for os-specific zipping
     - name: Zip Windows
-      if: matrix.platform == 'windows'
+      if: matrix.os == 'windows'
       run: Compress-Archive -Path build/windows/* -DestinationPath app-windows.zip
       shell: pwsh
 
     - name: Zip Linux/Mac
-      if: matrix.platform != 'windows'
-      run: zip -r app-${{ matrix.platform }}.zip build/${{ matrix.platform }}/*
+      if: matrix.os != 'windows'
+      run: zip -r app-${{ matrix.os }}.zip build/${{ matrix.os }}/*
 
     # This "saves" the file so the next job can see it
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: build-${{ matrix.platform }}
-        path: app-${{ matrix.platform }}.zip
+        name: build-${{ matrix.os }}
+        path: app-${{ matrix.os }}.zip
 
   release:
     needs: build # Wait for all builds to finish
@@ -81,5 +79,5 @@ jobs:
           overwrite: true
           body: |
             Changes:
-            - Multi-platform support (Windows, Linux, macOS)
+            - Multi-Platform support (Windows, Linux, macOS)
             - Bug Fixes
